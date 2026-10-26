@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bảng điều hành</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#000;--panel:#070707;--panel2:#0b0b0b;--line:#1a1a1a;--line2:#242424;--text:#f2f2f2;--mute:#a6a6a6;--mute2:#6b6b6b;--gold:#ecc970;--ok:#7ccf9b;--warn:#ecc970;--bad:#e8a39b;--claude:#d9734a;--codex:#3f8fd9;--mono:"JetBrains Mono",ui-monospace,monospace}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:"Be Vietnam Pro",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.head{display:grid;grid-template-columns:auto auto 1fr;gap:18px;align-items:center;padding:10px 18px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#0a0a0a,#050505)}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:34px;height:34px;border-radius:10px;background:var(--gold);color:#000;display:grid;place-items:center;font-weight:800;font-size:18px}
+.brand b{font-size:16px;display:block}.brand small{font-size:10px;color:var(--mute2);letter-spacing:.18em;text-transform:uppercase}
+.clock{display:flex;align-items:center;gap:12px;padding:0 18px;border-left:1px solid var(--line);border-right:1px solid var(--line)}
+.clock .t{font-size:26px;font-weight:700}
+.live{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;letter-spacing:.14em;color:var(--ok)}
+.live i{width:8px;height:8px;border-radius:50%;background:var(--ok);animation:pulse 1.4s infinite}
+.live.off{color:var(--bad)}.live.off i{background:var(--bad);animation:none}
+@keyframes pulse{50%{opacity:.25}}
+.views{justify-self:end;display:flex;gap:6px;flex-wrap:wrap}.views a{font-size:11px;color:var(--mute);text-decoration:none;border:1px solid var(--line2);border-radius:999px;padding:4px 11px}.views a:hover{color:var(--text)}
+main{padding:14px 18px 20px;display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+.kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:11px 13px;min-width:0}
+.kpi small{display:block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute2);font-weight:700}
+.kpi b{display:block;font-size:26px;margin-top:4px;font-family:var(--mono)}
+.kpi span{display:block;font-size:11px;color:var(--mute);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi.ok b{color:var(--ok)}.kpi.warn b{color:var(--warn)}.kpi.bad b{color:var(--bad)}
+.grid{display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1fr);gap:14px;align-items:start}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px;min-width:0}
+.panel h2{margin:0 0 10px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);display:flex;justify-content:space-between;gap:10px}
+.panel h2 em{font-style:normal;letter-spacing:0;text-transform:none;color:var(--mute2);font-weight:500}
+.staff{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:10px}
+.card{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-width:0}
+.card.active{border-color:#1f4030}.card.bad{border-color:#5a2f2a}
+.card .top{display:flex;align-items:center;gap:8px;min-width:0}
+.card .top b{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dot{width:9px;height:9px;border-radius:50%;flex:none}
+.sp{flex:1}
+.tag{font-size:10.5px;font-weight:700;border-radius:999px;padding:1px 8px;white-space:nowrap;border:1px solid var(--line2);color:var(--mute2)}
+.tag.ok{color:var(--ok);border-color:#244a33}.tag.bad{color:var(--bad);border-color:#5a2f2a}.tag.new{color:#000;background:var(--gold);border-color:var(--gold)}
+.meta{margin-top:4px;font-size:11px;color:var(--mute2);font-family:var(--mono)}
+.txt{margin-top:6px;font-size:12px;color:#cfcfcf;line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.hist{display:flex;gap:1px;height:12px;margin-top:8px}.hist i{flex:1;border-radius:1px;background:#161616}.hist i.on{background:var(--ok)}
+.ev{padding:7px 0;border-bottom:1px solid var(--line);font-size:12px;line-height:1.45}
+.ev:last-child{border-bottom:0}
+.ev small{display:block;color:var(--mute2);font-family:var(--mono);font-size:10.5px;margin-bottom:2px}
+.ev .w{color:#d6d6d6;overflow-wrap:anywhere}
+.al{font-size:12.5px;padding:6px 0;color:var(--bad)}
+svg text{fill:var(--mute2);font-family:var(--mono);font-size:10px}
+.empty{color:var(--mute2);font-size:12.5px;line-height:1.6}
+@media (max-width:900px){.head{grid-template-columns:1fr auto}.clock,.brand small{display:none}main{padding:12px 16px}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<header class="head">
+  <div class="brand"><div class="logo">V</div><div><b id="ttl">Bảng điều hành</b><small>Ai đang làm gì · trực tiếp</small></div></div>
+  <div class="clock"><span class="t mono" id="clock">--:--</span><span class="live" id="live"><i></i>TRỰC TIẾP</span></div>
+  <nav class="views"><a href="./" target="_top">Văn phòng 3D</a><a href="hieusuat.html" target="_top">Hiệu suất</a><a href="tinnhan.html" target="_top">Tin nhắn</a></nav>
+</header>
+<main>
+  <section class="kpis" id="kpis"></section>
+  <section class="grid">
+    <div class="panel"><h2>Nhân sự <em id="staffNote"></em></h2><div class="staff" id="staff"></div></div>
+    <div style="display:grid;gap:14px;min-width:0">
+      <div class="panel"><h2>Hoạt động 3 giờ qua <em>số phiên làm việc mỗi phút</em></h2><svg id="team" width="100%" height="120"></svg></div>
+      <div class="panel" id="alertsP" style="display:none"><h2>Cần chú ý</h2><div id="alerts"></div></div>
+      <div class="panel"><h2>Tin mới nhất <em><a href="tinnhan.html" target="_top" style="color:inherit">xem hết</a></em></h2><div id="evs"></div></div>
+    </div>
+  </section>
+</main>
+<script>
+"use strict";
+const $ = (id) => document.getElementById(id);
+const h = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+const PCOL = { codex: "#3f8fd9", claude: "#d9734a", human: "#ecc970" };
+const ST = { active: "đang làm", idle: "rảnh", away: "nghỉ", offline: "tắt" };
+const ago = (ms) => { if (!ms) return "–"; const s = Math.max(0, (Date.now() - ms) / 1000); return s < 60 ? Math.round(s) + " giây" : s < 3600 ? Math.round(s / 60) + " phút" : s < 86400 ? (s / 3600).toFixed(1).replace(".", ",") + " giờ" : Math.round(s / 86400) + " ngày"; };
+const hm = (ms) => new Date(ms).toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit", hour12: false });
+function render(s) {
+  document.title = "Bảng điều hành · " + s.title; $("ttl").textContent = s.title; $("clock").textContent = new Date(s.now).toLocaleTimeString("vi-VN", { hour12: false });
+  const staff = s.agents.filter((a) => a.platform !== "human"), name = (k) => (s.agents.find((a) => a.key === k) || { name: k }).name;
+  const act = staff.filter((a) => a.status === "active"), idle = staff.filter((a) => a.status === "idle"), away = staff.filter((a) => a.status === "away");
+  const k = $("kpis"); k.textContent = "";
+  const tile = (cls, lab, val, sub) => { const e = h("div", "kpi " + cls); e.append(h("small", "", lab), h("b", "", val)); if (sub) e.appendChild(h("span", "", sub)); k.appendChild(e); };
+  tile(act.length ? "ok" : "", "Đang làm", String(act.length), `${act.filter((a) => a.platform === "claude").length} Claude · ${act.filter((a) => a.platform === "codex").length} Codex`);
+  tile("", "Đang rảnh", String(idle.length), "đã mở, chờ việc");
+  tile("", "Nghỉ", String(away.length), `giữ trong văn phòng ${staff.length} phiên`);
+  tile(s.today.owner ? "warn" : "", "Việc Giám đốc giao", String(s.today.owner), "tin bạn gõ hôm nay");
+  tile("", "Tin giữa các phiên", String(s.today.msgs), "hôm nay");
+  const subs = staff.reduce((n, a) => n + (a.sub || 0), 0);
+  tile(s.alerts.length ? "bad" : "", "Cần chú ý", String(s.alerts.length), subs ? `${subs} phiên con đang chạy` : "không có phiên báo chặn");
+  // nhân sự: đang làm lên đầu
+  const order = { active: 0, idle: 1, away: 2, offline: 3 };
+  const list = [...staff].sort((a, b) => (order[a.status] - order[b.status]) || (b.lastActive || 0) - (a.lastActive || 0));
+  $("staffNote").textContent = `${staff.length} phiên · sắp theo đang làm`;
+  const S = $("staff"); S.textContent = "";
+  if (!list.length) S.appendChild(h("div", "empty", "Chưa thấy phiên Claude Code hay Codex nào của dự án trong 24 giờ qua. Mở một phiên trong thư mục dự án (đã khai ở config.json) là nhân viên xuất hiện ngay."));
+  for (const a of list) {
+    const c = h("div", "card" + (a.flag ? " bad" : a.status === "active" ? " active" : ""));
+    const top = h("div", "top"); const d = h("i", "dot"); d.style.background = PCOL[a.platform]; top.append(d, h("b", "", a.name), h("span", "sp"));
+    if (a.isNew) top.appendChild(h("span", "tag new", "MỚI"));
+    if (a.sub) top.appendChild(h("span", "tag", `${a.sub} phiên con`));
+    top.appendChild(h("span", "tag " + (a.flag ? "bad" : a.status === "active" ? "ok" : ""), a.flag ? "bị chặn" : ST[a.status] || a.status));
+    c.appendChild(top);
+    c.appendChild(h("div", "meta", `${a.platform === "codex" ? "Codex" : "Claude"} · ${a.role} · ${a.status === "active" ? "đang chạy" : "im " + ago(a.lastActive)}`));
+    c.appendChild(h("div", "txt", a.lastText || "(chưa có câu trả lời nào)"));
+    const hs = h("div", "hist"); for (const v of a.hist) hs.appendChild(h("i", v ? "on" : "")); hs.title = "60 phút gần nhất"; c.appendChild(hs);
+    S.appendChild(c);
+  }
+  // biểu đồ hoạt động
+  const svg = $("team"), W = svg.clientWidth || 400, H = 120, NS = "http://www.w3.org/2000/svg"; svg.textContent = "";
+  const max = Math.max(1, ...s.team.map((x) => x.codex + x.claude)), bw = W / s.team.length;
+  s.team.forEach((x, i) => {
+    const hc = (x.codex / max) * (H - 18), hl = (x.claude / max) * (H - 18);
+    for (const [hh, y, col] of [[hc, H - 14 - hc, PCOL.codex], [hl, H - 14 - hc - hl, PCOL.claude]]) if (hh > 0) { const r = document.createElementNS(NS, "rect"); r.setAttribute("x", i * bw); r.setAttribute("y", y); r.setAttribute("width", Math.max(1, bw - .5)); r.setAttribute("height", hh); r.setAttribute("fill", col); svg.appendChild(r); }
+    if (i % 60 === 0) { const t = document.createElementNS(NS, "text"); t.setAttribute("x", i * bw); t.setAttribute("y", H - 2); t.textContent = hm(x.t); svg.appendChild(t); }
+  });
+  // cảnh báo
+  $("alertsP").style.display = s.alerts.length ? "" : "none"; $("alerts").textContent = "";
+  for (const al of s.alerts) $("alerts").appendChild(h("div", "al", "■ " + al.text));
+  // tin mới nhất
+  const E = $("evs"); E.textContent = "";
+  const evs = s.events.slice(-12).reverse();
+  if (!evs.length) E.appendChild(h("div", "empty", "Chưa có tin nào trong 24 giờ."));
+  for (const e of evs) { const r = h("div", "ev"); r.append(h("small", "", `${hm(e.t)} · ${name(e.from)} → ${name(e.to)}`), h("div", "w", e.title)); E.appendChild(r); }
+}
+let lastAt = 0;
+const es = new EventSource("events");
+es.onmessage = (m) => { lastAt = Date.now(); $("live").className = "live"; try { render(JSON.parse(m.data)); } catch (e) { console.error(e); } };
+es.onerror = () => { $("live").className = "live off"; };
+setInterval(async () => { if (Date.now() - lastAt < 4000) return; try { const r = await fetch("state", { cache: "no-store" }); if (!r.ok) throw 0; lastAt = Date.now(); $("live").className = "live"; render(await r.json()); } catch { $("live").className = "live off"; } }, 2000);
+setInterval(() => { $("clock").textContent = new Date().toLocaleTimeString("vi-VN", { hour12: false }); }, 1000);
+</script>
+</body>
+</html>

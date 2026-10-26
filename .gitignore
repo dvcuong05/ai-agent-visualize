@@ -1,0 +1,7 @@
+# cấu hình riêng của từng máy (có thể chứa khóa xem) — KHÔNG đưa lên GitHub
+config.json
+config.json.bak
+node_modules/
+*.log
+*.pid
+.cloudflared/
