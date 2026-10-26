@@ -26,7 +26,7 @@ Văn phòng **không cần `npm install`**: nó không dùng thư viện ngoài 
 ## 2. Cài đặt: 3 lệnh
 
 ```bash
-git clone https://github.com/<tai-khoan>/van-phong-ao-3d.git
+git clone https://github.com/vinaichatbot-rgb/van-phong-ao-3d.git
 cd van-phong-ao-3d
 npm run setup
 ```
