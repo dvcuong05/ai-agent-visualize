@@ -1,18 +1,53 @@
 {
   "cap_nhat": "",
   "nguoi_ghi": "Quản lý",
-  "luat": "Một nguồn duy nhất cho thứ tự việc. Chỉ Quản lý (hoặc Điều phối) sửa bằng vp viec. Trạng thái đạt lấy từ goi/<gói>/viec.json, không ghi ở đây.",
+  "luat": "Một nguồn duy nhất cho thứ tự việc. Chỉ Quản lý (hoặc Điều phối) sửa bằng vp viec. Trạng thái đạt lấy từ goi/<gói>/viec.json, không ghi ở đây. muc_tieu: mỗi mục tiêu một dải bước (ket_qua = xong | dang_lam | chua). diem_nghen: nghen, goc, ai_xu_ly, quan_ly, han (ISO). Quản lý sửa tay file này.",
   "dang_lam": [
     {
       "thu_tu": 1,
       "viec": "Ví dụ: cài văn phòng ảo cho đội",
       "de_lam_gi": "Chủ văn phòng nhìn thấy cả đội đang làm gì",
-      "muc": ["vi-du:V1", "vi-du:V2"],
+      "muc": [
+        "vi-du:V1",
+        "vi-du:V2"
+      ],
       "chu": "Quản lý",
       "duyet": "",
       "can": "",
       "han": ""
     }
   ],
-  "tam_dung": []
+  "tam_dung": [],
+  "muc_tieu": [
+    {
+      "ten": "Ví dụ: đội AI dùng được văn phòng ảo",
+      "vi_sao": "Chủ văn phòng muốn mở bảng là thấy việc từ đâu ra, tới bước nào",
+      "cac_buoc": [
+        {
+          "luc": "hôm nay 09:00",
+          "viec": "Cài văn phòng, thấy đủ phiên",
+          "ket_qua": "xong"
+        },
+        {
+          "luc": "hôm nay 10:00",
+          "viec": "Dán luật đội vào AGENTS.md / CLAUDE.md",
+          "ket_qua": "dang_lam"
+        },
+        {
+          "luc": "mai",
+          "viec": "Các phiên tự đọc hòm thư cuối mỗi lượt",
+          "ket_qua": "chua"
+        }
+      ]
+    }
+  ],
+  "diem_nghen": [
+    {
+      "nghen": "Ví dụ: tin giao xong không ai đọc",
+      "goc": "Phiên AI chưa có luật đọc hòm thư cuối lượt",
+      "ai_xu_ly": "Quản lý",
+      "quan_ly": "Chủ văn phòng",
+      "han": ""
+    }
+  ]
 }

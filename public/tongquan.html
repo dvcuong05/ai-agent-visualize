@@ -41,6 +41,28 @@ main{padding:12px 18px 24px;display:grid;grid-template-columns:minmax(0,1fr);gap
 .tien{color:#d6d6d6;font-size:12px;line-height:1.5}.tien small{display:block;color:var(--mute2);font-family:var(--mono);font-size:10.5px;margin-bottom:2px}
 .can{color:var(--warn);font-size:12px;line-height:1.5}.can.none{color:var(--mute2)}
 .han{font-family:var(--mono);font-size:12px}.han.qua{color:var(--bad);font-weight:700}.han small{display:block;font-size:10.5px;color:var(--mute2)}
+/* tiến trình theo mục tiêu */
+.goal{padding:12px 0;border-bottom:1px solid var(--line)}.goal:last-child{border-bottom:0}
+.goal .gh{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}.goal .gh b{font-size:14.5px}
+.goal .gh span{font-family:var(--mono);font-size:11px;color:var(--mute2)}.goal .gh span em{font-style:normal;color:var(--gold)}
+.goal .why{font-size:12px;color:var(--mute);margin-top:3px;line-height:1.45}
+.steps{display:flex;margin-top:12px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin}
+.step{flex:1 0 150px;min-width:150px;position:relative;padding:20px 12px 6px 0}
+.step:before{content:"";position:absolute;top:6px;left:0;right:0;height:2px;background:#222}
+.step.xong:before{background:var(--ok)}.step.dang_lam:before{background:linear-gradient(90deg,var(--gold),#222)}
+.step .dot{position:absolute;top:0;left:0;width:14px;height:14px;border-radius:50%;background:#111;border:2px solid #333}
+.step.xong .dot{background:var(--ok);border-color:var(--ok)}
+.step.dang_lam .dot{background:var(--gold);border-color:var(--gold);box-shadow:0 0 0 0 rgba(236,201,112,.6);animation:ring 1.6s infinite}
+@keyframes ring{70%{box-shadow:0 0 0 8px rgba(236,201,112,0)}100%{box-shadow:0 0 0 0 rgba(236,201,112,0)}}
+.step small{display:block;font-family:var(--mono);font-size:10.5px;color:var(--mute2)}
+.step p{margin:3px 0 0;font-size:12.5px;line-height:1.4;overflow-wrap:anywhere}
+.step.xong p{color:#cfe9d8}.step.chua{opacity:.42}
+.step.dang_lam p{color:var(--gold);font-weight:700}.step.dang_lam small{color:var(--gold)}
+/* điểm nghẽn — gốc */
+.ng{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1.9fr) minmax(0,1.2fr) minmax(0,.8fr) 108px;gap:12px;padding:10px 4px;border-bottom:1px solid var(--line);font-size:12.5px;line-height:1.45;align-items:start}
+.ng:last-child{border-bottom:0}.ng.th{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute2);font-weight:700;padding:4px;border-bottom:1px solid var(--line2)}
+.ng .nn{font-weight:700;color:#f0d9a0}.ng .gg{color:#d6d6d6}.ng>div{overflow-wrap:anywhere}
+.ng.qua{background:linear-gradient(90deg,rgba(232,163,155,.07),transparent)}
 .lbl{display:none}
 /* bot */
 .bots{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
@@ -64,6 +86,13 @@ main{padding:12px 18px 24px;display:grid;grid-template-columns:minmax(0,1fr);gap
   .task>*:not(.n){grid-column:2}
   .lbl{display:block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute2);font-weight:700;margin-bottom:1px}
   .bots{grid-template-columns:1fr}
+  .steps{flex-direction:column;overflow:visible;margin-top:8px}
+  .step{flex:none;min-width:0;padding:0 0 12px 26px}
+  .step:before{top:0;bottom:0;left:6px;right:auto;width:2px;height:auto}
+  .step.dang_lam:before{background:linear-gradient(180deg,var(--gold),#222)}
+  .step .dot{top:2px}
+  .ng.th{display:none}
+  .ng{grid-template-columns:minmax(0,1fr);gap:4px;padding:12px 0}
 }
 </style>
 </head>
@@ -74,11 +103,13 @@ main{padding:12px 18px 24px;display:grid;grid-template-columns:minmax(0,1fr);gap
   <nav class="views"><a href="board.html" target="_top">Bảng điều hành</a><a href="hopthu.html" target="_top">Hòm thư</a><a href="congviec.html" target="_top">Công việc</a><a href="noiquy.html" target="_top">Nội quy</a><a href="./" target="_top">Văn phòng 3D</a></nav>
 </header>
 <main>
+  <section class="panel" id="goalsP"><h2>Tiến trình theo mục tiêu <em>bước xong · đang làm · chưa tới</em></h2><div id="goals"></div></section>
+  <section class="panel" id="ngP"><h2>Điểm nghẽn — gốc <em>ai xử lý, ai quản lý, hạn nào</em></h2><div id="ng"></div></section>
   <section class="kpis" id="kpis"></section>
   <section class="panel"><h2>Việc đang làm theo thứ tự ưu tiên <em id="uu"></em></h2><div id="tasks"></div></section>
   <section class="panel"><h2>Các bot đang làm gì <em>đỏ: rảnh mà còn việc, hoặc im quá 2 giờ khi còn việc</em></h2><div class="bots" id="bots"></div></section>
   <section class="panel paused"><h2>Tạm dừng</h2><div id="paused"></div></section>
-  <p class="note">Chỉ xem. Thứ tự việc lấy từ <code>data/UU-TIEN.json</code> (Quản lý ghi bằng <code>vp viec</code>); trạng thái đạt lấy từ <code>data/goi/&lt;gói&gt;/viec.json</code>; dòng tiến độ là dòng mới nhất trong <code>tien-do.md</code> có nhắc mã mục; số tin là tin hòm thư chưa đóng. Làm mới 10 giây một lần.</p>
+  <p class="note">Chỉ xem. Thứ tự việc, mục tiêu và điểm nghẽn lấy từ <code>data/UU-TIEN.json</code> (Quản lý ghi); trạng thái đạt lấy từ <code>data/goi/&lt;gói&gt;/viec.json</code>; dòng tiến độ là dòng mới nhất trong <code>tien-do.md</code> có nhắc mã mục; số tin là tin hòm thư chưa đóng. Làm mới 10 giây một lần.</p>
 </main>
 <script>
 "use strict";
@@ -93,10 +124,43 @@ const ST = { done: "Đạt", doing: "Đang làm", todo: "Chưa bắt đầu" };
 const STATUS = { active: "đang chạy", idle: "rảnh", away: "đã đóng", offline: "tắt" };
 let botsBy = {};
 function lbl(el, t) { el.prepend(h("span", "lbl", t)); return el; }
+// Mỗi mục tiêu: một dải bước theo thời gian (xanh = xong, vàng nổi = đang làm, mờ = chưa tới) + vì sao có việc này.
+let goalsSig = "", ngSig = "";
+function renderGoals(list) {
+  const sig = JSON.stringify(list); if (sig === goalsSig) return; goalsSig = sig; // chỉ vẽ lại khi Quản lý sửa, để không mất chỗ đang cuộn
+  const G = $("goals"); G.textContent = ""; $("goalsP").style.display = list.length ? "" : "none";
+  for (const g of list) {
+    const box = h("div", "goal"), done = g.buoc.filter((b) => b.kq === "xong").length, cur = g.buoc.find((b) => b.kq === "dang_lam");
+    const gh = h("div", "gh"); gh.appendChild(h("b", "", g.ten));
+    const meta = h("span", "", `${done}/${g.buoc.length} bước xong`); if (cur) { meta.append(" · đang: "); meta.appendChild(h("em", "", cur.viec)); } gh.appendChild(meta);
+    box.appendChild(gh);
+    if (g.viSao) box.appendChild(h("div", "why", "Vì sao: " + g.viSao));
+    const st = h("div", "steps");
+    for (const b of g.buoc) { const e = h("div", "step " + b.kq); e.append(h("i", "dot"), h("small", "", (b.kq === "xong" ? "✓ " : b.kq === "dang_lam" ? "▶ " : "") + b.luc), h("p", "", b.viec)); st.appendChild(e); }
+    box.appendChild(st); G.appendChild(box);
+    const c = st.querySelector(".dang_lam") || st.querySelector(".chua"); // dải dài: cuộn tới bước đang làm
+    if (c) requestAnimationFrame(() => { if (st.scrollWidth > st.clientWidth) st.scrollLeft = Math.max(0, c.getBoundingClientRect().left - st.getBoundingClientRect().left - st.clientWidth / 3); });
+  }
+}
+function renderNghen(list) {
+  const sig = JSON.stringify(list) + Math.floor(Date.now() / 60000); if (sig === ngSig) return; ngSig = sig;
+  const N = $("ng"); N.textContent = ""; $("ngP").style.display = list.length ? "" : "none";
+  const th = h("div", "ng th"); for (const x of ["Nghẽn", "Gốc", "Ai xử lý", "Quản lý", "Hạn"]) th.appendChild(h("div", "", x)); N.appendChild(th);
+  for (const n of list) {
+    const r = h("div", "ng" + (n.quaHan ? " qua" : ""));
+    r.appendChild(lbl(h("div", "nn", n.nghen), "Nghẽn"));
+    r.appendChild(lbl(h("div", "gg", n.goc), "Gốc"));
+    r.appendChild(lbl(h("div", "", n.aiXuLy || "—"), "Ai xử lý"));
+    r.appendChild(lbl(h("div", "", n.quanLy || "—"), "Quản lý"));
+    const hn = h("div", "han" + (n.quaHan ? " qua" : "")); if (n.han) { hn.append(dm(n.han)); hn.appendChild(h("small", "", n.quaHan ? "quá " + ago(n.han) : "còn " + mins((n.han - Date.now()) / 60000))); } else hn.textContent = "—";
+    r.appendChild(lbl(hn, "Hạn")); N.appendChild(r);
+  }
+}
 function render(d) {
   $("at").textContent = "cập nhật " + new Date(d.at).toLocaleTimeString("vi-VN", { hour12: false });
   if (d.error) { $("tasks").replaceChildren(h("div", "err", "Lỗi máy chủ: " + d.error)); return; }
   botsBy = Object.fromEntries(d.bots.map((b) => [b.key, b]));
+  renderGoals(d.mucTieu || []); renderNghen(d.diemNghen || []);
   $("uu").textContent = d.uu ? `UU-TIEN.json · ${d.uu.nguoiGhi} · ${d.uu.capNhat ? dm(d.uu.capNhat) : "?"}` : (d.uuErr || "");
   // ô số
   const k = $("kpis"); k.textContent = "";
