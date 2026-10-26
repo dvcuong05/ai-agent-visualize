@@ -1,156 +1,132 @@
 # Văn phòng ảo 3D cho đội AI
 
-Biến các phiên **Claude Code** và **Codex** đang chạy trên máy bạn thành một văn phòng 3D sống động. Mỗi phiên là một nhân viên robot có bàn riêng: đang làm thì gõ phím, xong việc thì báo cáo. Phiên này nhắn cho phiên kia thì robot đứng dậy đi sang bàn người nhận. Bạn giao việc thì cả nhóm ra phòng họp.
+Biến các phiên **Claude Code** và **Codex** trên máy bạn thành một công ty AI 3D sống động, kèm đủ bộ sổ điều phối như một đội thật: việc ưu tiên, gói việc, hòm thư, lượt DEV, sổ "Cần anh", nội quy, đội ngũ, bài học, đánh giá nhân sự và tiền AI.
 
-Kèm theo là ba màn hình lớn trên tường, mỗi màn hình mở riêng được:
+Mỗi phiên là một nhân viên robot có bàn riêng:
+- đang làm thì gõ phím, xong việc thì báo cáo;
+- phiên này nhắn phiên kia thì robot đi sang bàn người nhận;
+- bạn giao việc thì cả nhóm ra phòng họp;
+- ai đang giữ môi trường DEV thì đứng giữa Phòng DEV, ai đang chờ thì xếp hàng.
 
-- **Bảng điều hành**: ai đang làm, ai rảnh, ai đang báo bị chặn, câu trả lời mới nhất của từng phiên.
-- **Hiệu suất**: số token từng phiên dùng theo giờ và theo ngày, điểm xếp loại A/B/C/D, quỹ Codex tuần.
-- **Tin nhắn**: việc bạn giao và tin các phiên gửi nhau trong 24 giờ.
-
-> **Chỉ đọc, chạy tại máy bạn.** Văn phòng chỉ đọc nhật ký mà Claude Code và Codex vốn tự ghi trong `~/.claude` và `~/.codex`. Nó không gửi dữ liệu đi đâu, không sửa file nào và không cần khóa API. Trước khi hiện, mọi chuỗi giống khóa (token, password, `sk-…`, `ghp_…`) đều được che.
+> **Chỉ đọc, chạy tại máy bạn.** Văn phòng chỉ đọc nhật ký mà Claude Code và Codex vốn tự ghi (`~/.claude`, `~/.codex`) và sổ của đội trong thư mục `data/`. Nó không gửi dữ liệu đi đâu và không cần khóa API. Mọi chuỗi giống khóa đều được che trước khi hiện. Kho không dùng thư viện ngoài nào, nên không cần `npm install`.
 
 ---
 
-## 1. Cần có gì
+## Cách nhanh nhất: gửi link này cho agent của bạn
 
-| Thứ cần | Ghi chú |
-|---|---|
-| **Node.js 18 trở lên** | Tải ở https://nodejs.org (chọn bản LTS). Kiểm bằng lệnh `node -v`. |
-| **Claude Code** hoặc **Codex** (hoặc cả hai) | Đã dùng ít nhất một lần trên máy, để có nhật ký cho văn phòng đọc. |
-| **Git** | Để tải mã về. Không có Git thì tải file ZIP ở nút **Code → Download ZIP** trên GitHub. |
-| Trình duyệt Chrome, Edge hoặc Safari | Văn phòng 3D dùng WebGL. |
+Mở Claude Code hoặc Codex **trong thư mục dự án của bạn** và gõ:
 
-Văn phòng **không cần `npm install`**: nó không dùng thư viện ngoài nào. Thư viện 3D (three.js) được trình duyệt tải từ CDN.
+> Cài văn phòng ảo cho dự án này theo hướng dẫn ở https://github.com/vinaichatbot-rgb/van-phong-ao-3d (đọc file HUONG-DAN-CHO-AGENT.md)
 
-## 2. Cài đặt: 3 lệnh
+Agent sẽ tự làm các bước sau. Những bước có thay đổi bên ngoài thì nó sẽ hỏi bạn trước:
+
+1. Kiểm tra Node.js.
+2. Tải mã về.
+3. Cài đặt.
+4. Chạy và tự kiểm.
+5. Hỏi bạn rồi mới dán luật đội vào `AGENTS.md` / `CLAUDE.md`, để mọi phiên AI tự dùng hòm thư, lượt DEV và sổ "Cần anh".
+6. Điền sổ cho đúng đội thật.
+7. Báo lại link cho bạn.
+
+## Cài tay
+
+Cần **Node.js 18+** (https://nodejs.org), cùng với **Claude Code** hoặc **Codex** đã dùng trên máy.
 
 ```bash
 git clone https://github.com/vinaichatbot-rgb/van-phong-ao-3d.git
 cd van-phong-ao-3d
 npm run setup
-```
-
-`npm run setup` sẽ hỏi bạn 4 câu:
-
-1. **Theo dõi dự án nào.** Máy tự liệt kê các thư mục đã dùng Claude Code hoặc Codex trong 14 ngày qua; bạn chỉ cần gõ số thứ tự. Muốn theo dõi nhiều dự án thì gõ `1,3`. Để trống là theo dõi mọi dự án trên máy.
-2. **Tên văn phòng**, ví dụ `Văn phòng Vin Media`.
-3. **Bạn muốn được gọi là gì**, ví dụ `Anh Hải`. Bạn ngồi ở Phòng Giám đốc.
-4. **Có muốn xem trên điện thoại qua Internet không.** Trả lời `c` thì máy tạo một **khóa xem**; hãy ghi khóa này lại.
-
-Trả lời xong, máy ghi ra file `config.json`.
-
-## 3. Chạy
-
-```bash
 npm start
 ```
 
-Rồi mở **http://localhost:7788** trên trình duyệt.
+Mở **http://localhost:7788**.
 
-- Kéo chuột để xoay, cuộn hoặc chụm hai ngón để phóng to.
-- Bấm vào tên một robot để xem phiên đó đang làm gì và câu trả lời mới nhất.
-- Ba nút trên cùng dùng để phóng vào từng màn hình: **◧ Hiệu suất**, **Xem màn hình lớn**, **Tin nhắn ◨**. Bấm **Về văn phòng 3D** hoặc phím `Esc` để quay lại.
-- Muốn tắt văn phòng thì bấm `Ctrl + C` trong cửa sổ đang chạy.
+`npm run setup` hỏi 5 câu:
+1. Theo dõi dự án nào: máy tự liệt kê các thư mục đã dùng AI trong 14 ngày, bạn gõ số thứ tự.
+2. Tên văn phòng.
+3. Bạn muốn được gọi là gì.
+4. Có xem trên điện thoại không: trả lời có thì máy tạo khóa xem.
+5. Có dán luật đội vào `AGENTS.md` / `CLAUDE.md` không.
 
-Mở thêm một phiên Claude Code hay Codex trong thư mục dự án thì trong vòng 5 giây sẽ có **nhân viên mới** vào văn phòng, kèm lời chào. Phiên im quá 24 giờ thì tự rời văn phòng; đổi mốc này bằng `keepHours`.
+Xong, máy ghi `config.json` và tạo sổ `data/` từ khung mẫu `mau/`.
 
-## 4. Xem trên điện thoại
+## Các màn hình
 
-**Cách 1: cùng mạng Wi-Fi.** Trong `config.json`, đổi `"host": "127.0.0.1"` thành `"host": "0.0.0.0"` và đặt `accessKey`. Chạy lại `npm start`, rồi trên điện thoại mở `http://<IP máy tính>:7788`. Xem IP máy tính bằng lệnh `ipconfig` trên Windows hoặc `ifconfig` trên macOS.
-
-**Cách 2: qua Internet, ở đâu cũng xem được.** Cách này dùng đường hầm Cloudflare miễn phí và không cần tài khoản.
-
-1. Cài cloudflared một lần:
-   - Windows: `winget install --id Cloudflare.cloudflared`
-   - macOS: `brew install cloudflared`
-2. Giữ cửa sổ `npm start` đang chạy. Mở cửa sổ thứ hai và chạy:
-   - Windows: `powershell -ExecutionPolicy Bypass -File scripts\xem-tren-dien-thoai.ps1`
-   - macOS / Linux: `sh scripts/xem-tren-dien-thoai.sh`
-3. Màn hình hiện một link dạng `https://xxxx.trycloudflare.com`. Mở link đó trên điện thoại và nhập khóa xem **một lần**; điện thoại nhớ khóa 30 ngày.
-
-> Script sẽ **không chạy** nếu chưa có khóa xem, vì ai có link cũng sẽ đọc được câu trả lời của các phiên AI của bạn. Link sẽ đổi mỗi lần bạn mở lại đường hầm.
-
-## 5. Văn phòng xếp chỗ thế nào
-
-| Phòng | Ai ngồi |
+| Màn | Có gì |
 |---|---|
-| Phòng Giám đốc | Bạn. Bạn gõ việc vào phiên nào thì Giám đốc "nói" với phiên đó, và cả nhóm ra phòng họp. |
-| Phòng Quản lý & Điều phối | Phiên có tên chứa: quản lý, manager, lead, trưởng nhóm, điều phối, PM |
-| Phòng Kiểm tra | Phiên có tên chứa: review, duyệt, kiểm tra, test, QA |
-| Studio Claude | Các phiên Claude Code còn lại |
-| Khu kỹ sư Codex | Các phiên Codex còn lại |
-| Phòng máy chủ | Sáng lên theo số người đang làm |
-| Phòng họp | Họp tự động: khi Giám đốc giao việc; khi có tin báo GẤP/CHẶN (họp sự cố); khi có tin REVIEW/duyệt (họp review); khi một phiên giao việc cho từ 2 phiên trở lên trong 5 phút (họp giao việc) |
+| **Văn phòng 3D** | 8 phòng: Giám đốc, Quản lý, Điều phối, Kiểm tra & duyệt, Studio Claude, Phòng DEV, Khu Codex, Phòng họp. Robot đi lại, tin bay giữa bàn, họp tự động. Trên cùng có ô **Cần anh** và **Tiền AI hôm nay**, kèm 3 màn hình lớn trên tường |
+| **Bảng điều hành** (màn giữa) | Đang làm / chờ / bị chặn / rảnh. Phòng DEV: ai giữ, bao lâu, dịch vụ khỏe không. Việc ưu tiên, lịch DEV hôm nay, hàng chờ, luồng tin, băng chữ chạy, dải "Cần anh làm", nhịp làm việc 3 giờ |
+| **Công việc & tiến độ** (màn trái) | Việc đang áp dụng theo thứ tự, nhật ký quyết định, tiến độ từng gói (mục "Đang dở"), DEV và việc chờ anh |
+| **Nội quy & đội ngũ** (màn phải) | Nội quy (mục mới đổi gắn nhãn MỚI), đội ngũ (chấm xanh khi phiên đang có mặt), cấp bậc, sổ tay gồm bài học, việc để sau, từ điển, SPEC |
+| **Tổng quan** | Việc gì, để làm gì, ai làm, tới đâu, nghẽn ở đâu (hạn quá thì đỏ). Từng bot đang làm gì, ai "rảnh mà còn việc", ai "im quá 2 giờ" |
+| **Hòm thư** | Mỗi vai: số tin chưa xong, chờ quá 1 giờ, đọc lại từ 3 lần mà chưa xong, chưa đọc, tin cũ nhất |
+| **Đánh giá nhân sự** | Token theo giờ và ngày, quỹ Codex tuần, xếp loại A/B/C/D theo việc xong, lỗi lệnh, lượt DEV, giờ làm, độ tiết kiệm |
+| **Tin nhắn** | Toàn bộ tin 24 giờ, lọc theo người |
+| **Sơ đồ 2D** | Bản nhẹ cho điện thoại yếu: mặt bằng, người, tin bay, cảnh báo, dòng thời gian |
+| **Nhắn tin cho agent** | Bấm vào một người trên văn phòng hoặc bảng điều hành, gõ tin. Tin vào hòm thư của người đó; từ xa phải nhập **PIN 6 số**, mã chỉ hiện trên chính máy bạn |
 
-**Tên nhân viên** lấy từ tên phiên: tên bạn đặt bằng `/rename` trong Claude Code, hoặc tên thread trong Codex. Chưa đặt tên thì nhân viên hiện là `Claude 1a2b3c4d`.
+## Sổ điều phối `data/` và công cụ `vp`
 
-**Tự đặt tên, chức danh và phòng** trong `config.json`:
+Sổ của đội nằm trong `data/`. Thư mục này đã có trong `.gitignore`, mỗi máy một bộ riêng. Agent ghi sổ bằng `node tools/vp.js …`, gõ `node tools/vp.js giup` để xem đủ lệnh:
 
-```json
-"staff": [
-  { "match": "quản lý", "role": "Quản lý dự án", "room": "lead" },
-  { "match": "019e544d", "name": "Kỹ sư Backend", "role": "Code API" }
-]
-```
+| Sổ | Lệnh |
+|---|---|
+| Hòm thư `hop-thu/<vai>.jsonl` | `vp gui --toi "<vai>" "[VIỆC] …"` · `vp tiep --toi "<vai mình>"` (cuối mỗi lượt) · `vp xong <mã>` · `vp ds` |
+| Lượt DEV `DEV.lock`, `DEV-LUOT.jsonl` | `vp luot cho \| lay \| nha \| huy \| xem` |
+| Cần anh `CAN-ANH.md` | `vp cananh hoi \| xong \| ds` |
+| Việc ưu tiên `UU-TIEN.json` | `vp viec ds \| them \| sua \| dung \| xoa` |
+| Gói việc `goi/<gói>/viec.json` + `tien-do.md` | `vp goi tao \| muc \| dat \| sua \| ghichu` · `vp tiendo <gói> "…"` |
+| Bài học `BAI-HOC.md` | `vp baihoc --the "<thẻ>" "…" --chan "…"` |
+| Nội quy, đội ngũ, cấp bậc, việc để sau, từ điển, quyết định, SPEC | sửa tay các file `.md` trong `data/` (khung mẫu ở `mau/`) |
 
-- `match` là một phần tên phiên, hoặc 8 ký tự đầu của mã phiên (mã này hiện khi bấm vào robot).
-- `room` nhận một trong các giá trị: `lead`, `review`, `claude`, `codex`.
-- Muốn giấu một phiên thì thêm mã đầy đủ của phiên đó vào `"hide": []`.
+Luật đội để dán vào dự án nằm ở `data/DOAN-CHEN-VAO-AGENTS.md`, đã điền sẵn đường dẫn. Nó dặn mọi phiên AI 4 việc:
+- đọc hòm thư cuối mỗi lượt;
+- hỏi chủ qua sổ "Cần anh";
+- lấy và nhả lượt DEV;
+- ghi "Đang dở" trước khi nghỉ.
 
-## 6. Điểm hiệu suất được chấm thế nào
+## Xem trên điện thoại
 
-Thang 100 điểm, chỉ dùng số đo được trong nhật ký:
+- **Cùng Wi-Fi:** đặt `"host": "0.0.0.0"` và `accessKey` trong `config.json`, rồi mở `http://<IP máy>:7788`.
+- **Qua Internet:** cài cloudflared (Windows: `winget install --id Cloudflare.cloudflared`; macOS: `brew install cloudflared`). Chạy `powershell -ExecutionPolicy Bypass -File scripts\xem-tren-dien-thoai.ps1` hoặc `sh scripts/xem-tren-dien-thoai.sh`, mở link `trycloudflare.com` rồi nhập khóa xem một lần. Script sẽ không chạy nếu chưa có khóa xem.
 
-| Phần | Điểm | Cách đo |
-|---|---|---|
-| Kết quả | 40 | Số lượt việc làm xong trong 24 giờ (Claude: lượt trả lời kết thúc; Codex: `task_complete`), mỗi lượt +4 |
-| Tin cậy | 20 | Tỉ lệ lệnh/công cụ chạy không lỗi trong 24 giờ (lỗi từ 25% trở lên = 0) |
-| Chăm chỉ | 20 | Số giờ có hoạt động trong 24 giờ (từ 10 giờ trở lên = đủ) |
-| Tiết kiệm | 20 | Token mới mỗi giờ làm so với mức giữa của các phiên cùng loại (bằng hoặc thấp hơn = đủ; gấp 4 lần = 0) |
-
-Xếp loại: **A** từ 80 điểm, **B** từ 65, **C** từ 50, **D** dưới 50. Phiên làm dưới 1 giờ trong 7 ngày thì chưa xếp loại. Điểm chỉ là số đo tham khảo, không thay việc đánh giá chất lượng công việc.
-
-## 7. Bảng cấu hình `config.json`
+## Cấu hình `config.json`
 
 | Khóa | Mặc định | Ý nghĩa |
 |---|---|---|
-| `title`, `subtitle` | Văn phòng AI | Tên hiện trên văn phòng |
-| `ownerName` | Giám đốc | Tên của bạn trong văn phòng |
-| `projects` | `[]` | Danh sách thư mục dự án cần theo dõi (tính cả thư mục con và worktree). Để trống là mọi dự án |
-| `port` | 7788 | Cổng web |
-| `host` | 127.0.0.1 | `127.0.0.1` thì chỉ máy này xem được; `0.0.0.0` thì máy khác trong mạng cũng xem được (nên đặt `accessKey`) |
-| `accessKey` | `""` | Khóa xem. Có khóa thì phải nhập một lần mới xem được |
+| `title`, `subtitle`, `ownerName` | Văn phòng AI, …, Giám đốc | Tên hiện trên văn phòng |
+| `projects` | `[]` | Thư mục dự án cần theo dõi (tính cả thư mục con, worktree). Để trống là mọi dự án |
+| `port`, `host` | 7788, 127.0.0.1 | `0.0.0.0` để máy khác trong mạng xem được |
+| `accessKey` | `""` | Khóa xem: nhập một lần mới vào được |
 | `keepHours` | 24 | Phiên im quá số giờ này thì rời văn phòng |
-| `staff`, `hide` | `[]` | Đặt tên, chức danh và phòng; giấu phiên |
-| `claudeDir`, `codexDir` | `~/.claude`, `~/.codex` | Đổi khi bạn để nhật ký ở chỗ khác |
+| `staff`, `hide` | `[]` | Đặt tên, chức danh, phòng (`manager`, `coord`, `g1`, `claude`, `codex`) cho phiên; giấu phiên |
+| `dataDir` | `data` | Nơi để sổ điều phối |
+| `rulesFile` | `""` | File nội quy riêng; để trống thì dùng `data/NOI-QUY.md`, không có thì `AGENTS.md` / `CLAUDE.md` của dự án |
+| `aiCapUsd` | 100 | Trần tiền AI mỗi ngày (vượt 80% thì ô chuyển đỏ) |
+| `prices` | Claude 3/0,3/15 · Codex 1,25/0,125/10 | Giá API (USD cho 1 triệu token: vào / đọc đệm / ra) để **ước tính** tiền. Dùng gói thuê bao tháng thì đây chỉ là số để so sánh |
+| `dockerFilter`, `dockerStrip`, `dockerRetired` | `""`, `""`, `[]` | Hiện container Docker trong Phòng DEV, ví dụ `"name=myapp-dev"` |
 
-> `config.json` đã có sẵn trong `.gitignore`. **Đừng đưa file này lên GitHub**, vì nó chứa khóa xem và đường dẫn trên máy bạn.
-
-## 8. Gặp lỗi thường gặp
+## Gặp lỗi
 
 | Hiện tượng | Cách xử lý |
 |---|---|
-| `Chưa có config.json` | Chạy `npm run setup` trước `npm start`. |
-| Văn phòng trống, không có robot nào | Mở một phiên Claude Code hoặc Codex **trong đúng thư mục dự án** đã chọn lúc setup. Kiểm tra lại `projects` trong `config.json` (dùng dấu `/`, ví dụ `D:/du-an`). |
-| `EADDRINUSE` | Cổng 7788 đang bận. Đổi `port` trong `config.json`, ví dụ thành 7789. |
-| Trang trắng, không có hình 3D | Trình duyệt chặn WebGL hoặc máy không có mạng để tải three.js. Thử Chrome hoặc Edge bản mới. |
-| Điện thoại báo không vào được | Kiểm tra cửa sổ `npm start` còn chạy không, và đã nhập đúng khóa xem chưa. |
-| Robot không đi sang bàn nhau | Các phiên phải nhắn nhau thật, bằng SendMessage của Claude Code hoặc cầu nối PEER MESSAGE của Codex. Tin bạn gõ thì hiện là "Giám đốc nói". |
+| `Chưa có config.json` | Chạy `npm run setup` trước. |
+| Văn phòng trống | Mở phiên AI **trong đúng thư mục dự án** đã chọn; kiểm `projects` (dùng dấu `/`). |
+| `EADDRINUSE` | Cổng 7788 đang bận: đổi `port`. |
+| Màn 3D đen | Trình duyệt chặn WebGL hoặc máy không tải được three.js. Thử Chrome/Edge mới, hoặc dùng Sơ đồ 2D. |
+| Hòm thư không ai đọc | Phiên AI chưa có luật đội: dán `data/DOAN-CHEN-VAO-AGENTS.md` vào `AGENTS.md` / `CLAUDE.md`, và đặt tên phiên trùng tên vai. |
 
-## 9. Cấu trúc mã
+## Cấu trúc mã
 
 ```
-server.js            máy chủ: tìm phiên, đọc nhật ký, đẩy trạng thái mỗi giây
-lib/perf.js          đếm token theo giờ/ngày, chấm điểm
-setup.js             hỏi–đáp tạo config.json
-public/index.html    văn phòng 3D (three.js)
-public/board.html    bảng điều hành
-public/hieusuat.html hiệu suất & token
-public/tinnhan.html  tin nhắn 24 giờ
-scripts/             mở đường hầm xem trên điện thoại
+server.js              máy chủ: tìm phiên, đọc nhật ký + sổ, đẩy trạng thái mỗi giây
+lib/                   perf (token, điểm, tiền) · docs (sổ sách) · hopthu · tongquan · chat (PIN) · mailbox · config
+tools/vp.js            công cụ ghi sổ cho agent
+setup.js               cài đặt (hỏi–đáp hoặc --yes cho agent)
+mau/                   khung mẫu sổ điều phối + đoạn luật đội cho AGENTS.md / CLAUDE.md
+public/                giao diện: index (3D), board, congviec, noiquy, tongquan, hopthu, hieusuat, tinnhan, 2d
+scripts/               mở đường hầm xem trên điện thoại
+HUONG-DAN-CHO-AGENT.md hướng dẫn để agent tự cài từ link này
 ```
 
-## Giấy phép
-
-MIT: dùng, sửa và chia sẻ tự do. Xem file `LICENSE`.
+Giấy phép MIT.

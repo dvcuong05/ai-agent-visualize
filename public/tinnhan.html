@@ -52,7 +52,7 @@ function render(s) {
   const A = Object.fromEntries(s.agents.map((a) => [a.key, a]));
   const people = [...new Set(s.events.flatMap((e) => [e.from, e.to]))].filter((k) => A[k]);
   const F = $("filters"); F.textContent = "";
-  for (const [k, lab] of [["all", "Tất cả"], ["owner", "Việc Giám đốc giao"], ...people.filter((k) => k !== "owner").map((k) => [k, A[k].name])]) {
+  for (const [k, lab] of [["all", "Tất cả"], ["ceo", "Việc Giám đốc giao"], ...people.filter((k) => k !== "ceo").map((k) => [k, A[k].name])]) {
     const b = h("button", who === k ? "on" : "", lab); b.onclick = () => { who = k; sig = ""; render(last); }; F.appendChild(b);
   }
   const evs = s.events.filter((e) => who === "all" || e.from === who || e.to === who).slice().reverse();
@@ -61,7 +61,7 @@ function render(s) {
   if (!evs.length) L.appendChild(h("div", "empty", "Chưa có tin nào trong 24 giờ qua."));
   for (const e of evs) {
     const f = A[e.from] || { name: e.from, platform: "human" }, t = A[e.to] || { name: e.to, platform: "human" };
-    const m = h("div", "msg" + (e.kind === "owner" ? " owner" : ""));
+    const m = h("div", "msg" + (e.kind === "ceo" ? " owner" : ""));
     m.appendChild(h("time", "", hm(e.t)));
     const c = h("div"); const w = h("div", "who");
     const d1 = h("i"); d1.style.background = PCOL[f.platform]; const d2 = h("i"); d2.style.background = PCOL[t.platform];

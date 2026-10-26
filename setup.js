@@ -1,5 +1,6 @@
 // Cài đặt văn phòng ảo: hỏi vài câu rồi ghi config.json.
-// Chạy: npm run setup   (hoặc: node setup.js --project "D:/du-an" --title "Văn phòng ABC" --owner "Anh Hải" --yes)
+// Chạy: npm run setup
+// Không hỏi (cho agent): node setup.js --yes --project "D:/du-an" [--title "Văn phòng ABC"] [--owner "Anh Hải"] [--key <khóa xem>] [--chen-luat]
 "use strict";
 const fs = require("fs");
 const path = require("path");
@@ -45,6 +46,7 @@ function findProjects() {
 
 async function main() {
   console.log("\n=== Cài đặt Văn phòng ảo 3D cho đội AI ===\n");
+  const old = fs.existsSync(OUT) ? JSON.parse(fs.readFileSync(OUT, "utf8")) : {}; // chạy lại thì giữ giá trị cũ làm mặc định
   console.log(`Claude Code: ${fs.existsSync(path.join(CLAUDE, "projects")) ? "có (" + CLAUDE + ")" : "chưa thấy"}`);
   console.log(`Codex:       ${fs.existsSync(path.join(CODEX, "sessions")) ? "có (" + CODEX + ")" : "chưa thấy"}`);
   if (!fs.existsSync(path.join(CLAUDE, "projects")) && !fs.existsSync(path.join(CODEX, "sessions"))) console.log("\n(!) Máy này chưa có nhật ký Claude Code hay Codex. Vẫn cài được, văn phòng sẽ trống cho tới khi bạn mở phiên đầu tiên.");
@@ -52,7 +54,8 @@ async function main() {
   const ask = (q, def) => YES ? Promise.resolve(def) : new Promise((r) => rl.question(`${q}${def ? ` [${def}]` : ""}: `, (a) => r(a.trim() || def || "")));
 
   let projects = flags("project");
-  if (!projects.length) {
+  if (!projects.length && YES && old.projects) projects = old.projects;
+  if (!projects.length && !YES) {
     const ps = findProjects().slice(0, 12);
     if (ps.length) {
       console.log("\nCác thư mục dự án đã dùng AI trong 14 ngày qua:");
@@ -65,17 +68,45 @@ async function main() {
       else console.log(`  Bỏ qua "${x}": không có thư mục này.`);
     }
   }
-  const title = flag("title") || await ask("Tên văn phòng", "Văn phòng AI");
-  const ownerName = flag("owner") || await ask("Bạn muốn được gọi là gì trong văn phòng", "Giám đốc");
-  const phone = flag("key") ? "c" : (await ask("Có muốn xem trên điện thoại qua Internet không? (c/k)", "k")).toLowerCase();
-  const accessKey = flag("key") || (phone.startsWith("c") ? crypto.randomBytes(9).toString("base64url") : "");
+  const title = flag("title") || await ask("Tên văn phòng", old.title || "Văn phòng AI");
+  const ownerName = flag("owner") || await ask("Bạn muốn được gọi là gì trong văn phòng", old.ownerName || "Giám đốc");
+  const phone = flag("key") ? "c" : (await ask("Có muốn xem trên điện thoại qua Internet không? (c/k)", old.accessKey ? "c" : "k")).toLowerCase();
+  const accessKey = flag("key") || (phone.startsWith("c") ? old.accessKey || crypto.randomBytes(9).toString("base64url") : "");
+  const chen = args.includes("--chen-luat") ? "c" : YES ? "k" : (await ask("Dán đoạn luật đội vào AGENTS.md / CLAUDE.md của dự án để agent tự dùng văn phòng? (c/k)", "c")).toLowerCase();
   if (rl) rl.close();
 
-  const cfg = { title, subtitle: "Công ty AI · trực tiếp", ownerName, port: 7788, host: "127.0.0.1", projects, keepHours: 24, accessKey, staff: [], hide: [] };
+  const cfg = { ...old, title, subtitle: old.subtitle || "Công ty AI · trực tiếp", ownerName, port: old.port || 7788, host: old.host || "127.0.0.1", projects, keepHours: old.keepHours || 24, accessKey, dataDir: old.dataDir || "data", aiCapUsd: old.aiCapUsd || 100, staff: old.staff || [], hide: old.hide || [] };
   if (fs.existsSync(OUT)) fs.copyFileSync(OUT, OUT + ".bak");
   fs.writeFileSync(OUT, JSON.stringify(cfg, null, 2) + "\n");
   console.log(`\nĐã ghi ${OUT}`);
   console.log(`Theo dõi: ${projects.length ? projects.join(", ") : "mọi dự án trên máy"}`);
+
+  // Sổ điều phối: chép khung mẫu (mau/) sang thư mục data/, không ghi đè file đã có.
+  const DATA = path.resolve(ROOT, cfg.dataDir), MAU = path.join(ROOT, "mau");
+  const copied = [];
+  (function cp(src, dst) {
+    fs.mkdirSync(dst, { recursive: true });
+    for (const e of fs.readdirSync(src, { withFileTypes: true })) {
+      const a = path.join(src, e.name), b = path.join(dst, e.name);
+      if (e.isDirectory()) cp(a, b); else if (e.name !== "DOAN-CHEN-VAO-AGENTS.md" && !fs.existsSync(b)) { fs.copyFileSync(a, b); copied.push(path.relative(DATA, b)); }
+    }
+  })(MAU, DATA);
+  fs.mkdirSync(path.join(DATA, "hop-thu"), { recursive: true });
+  console.log(`Sổ điều phối: ${DATA}${copied.length ? ` (chép ${copied.length} file mẫu)` : ""}`);
+  // Đoạn luật cho agent, điền sẵn đường dẫn thật
+  const slash = (x) => x.split(path.sep).join("/");
+  const VP = slash(path.join(ROOT, "tools", "vp.js"));
+  const snippet = fs.readFileSync(path.join(MAU, "DOAN-CHEN-VAO-AGENTS.md"), "utf8").split("{{VP}}").join(VP).split("{{DATA}}").join(slash(DATA)).split("{{PORT}}").join(String(cfg.port));
+  fs.writeFileSync(path.join(DATA, "DOAN-CHEN-VAO-AGENTS.md"), snippet);
+  if (chen.startsWith("c") && projects.length) {
+    const MARK = "## Văn phòng ảo và sổ điều phối của đội";
+    for (const p of projects) for (const f of ["AGENTS.md", "CLAUDE.md"]) {
+      const file = path.join(p, f), cur = fs.existsSync(file) ? fs.readFileSync(file, "utf8") : "";
+      if (cur.includes(MARK)) { console.log(`  ${file}: đã có đoạn luật, bỏ qua`); continue; }
+      fs.writeFileSync(file, (cur ? cur.trimEnd() + "\n\n" : "") + snippet);
+      console.log(`  Đã dán đoạn luật đội vào ${file}`);
+    }
+  } else console.log(`Đoạn luật cho agent: ${path.join(DATA, "DOAN-CHEN-VAO-AGENTS.md")} — dán vào AGENTS.md / CLAUDE.md của dự án.`);
   if (accessKey) console.log(`\nKhóa xem văn phòng (ghi lại, nhập một lần trên điện thoại): ${accessKey}\nKhóa nằm trong config.json — đừng đưa file này lên GitHub.`);
   console.log("\nBước tiếp:  npm start   rồi mở http://localhost:7788\n");
 }

@@ -114,7 +114,7 @@ svg text{fill:var(--mute2);font-family:var(--mono);font-size:10px}
 <header class="head">
   <div class="brand"><div class="logo">V</div><div><b>Đánh giá nhân sự AI</b><small>Hiệu suất · token · xếp loại</small></div></div>
   <div class="clock"><span class="t mono" id="clock">--:--</span><span class="live" id="live"><i></i>TRỰC TIẾP</span></div>
-  <nav class="views"><a href="./" target="_top">Văn phòng 3D</a><a href="board.html" target="_top">Bảng điều hành</a><a href="tinnhan.html" target="_top">Tin nhắn</a></nav>
+  <nav class="views"><a href="./" target="_top">Văn phòng 3D</a><a href="board.html" target="_top">Bảng điều hành</a><a href="tongquan.html" target="_top">Tổng quan</a><a href="tinnhan.html" target="_top">Tin nhắn</a></nav>
 </header>
 <main>
   <section class="kpis" id="kpis"></section>
@@ -125,12 +125,12 @@ svg text{fill:var(--mute2);font-family:var(--mono);font-size:10px}
   <section class="panel">
     <div class="ph"><h2>Bảng xếp loại nhân sự</h2><div class="legend"><span><i style="background:var(--p1)"></i>Kết quả /40</span><span><i style="background:var(--p2)"></i>Tin cậy /20</span><span><i style="background:var(--p3)"></i>Chăm chỉ /20</span><span><i style="background:var(--p4)"></i>Tiết kiệm /20</span></div></div>
     <div style="overflow-x:auto"><table class="tbl"><thead><tr>
-      <th>#</th><th>Nhân sự</th><th>Loại</th><th>Điểm</th><th class="n">Giờ làm 24h</th><th class="n">Việc xong 24h</th><th class="n">Lỗi lệnh</th><th class="n">Tin 24h</th><th class="n">Token 24h</th><th class="n">Token mới / giờ</th><th class="n">Đệm</th><th>24 giờ</th><th>Lúc này</th>
+      <th>#</th><th>Nhân sự</th><th>Loại</th><th>Điểm</th><th class="n">Giờ làm 24h</th><th class="n">Việc xong 24h</th><th class="n">Lỗi lệnh</th><th class="n">Lượt DEV 7 ngày</th><th class="n">Tin 24h</th><th class="n">Token 24h</th><th class="n">Token mới / giờ</th><th class="n">Đệm</th><th>24 giờ</th><th>Lúc này</th>
     </tr></thead><tbody id="rows"></tbody></table></div>
   </section>
   <section class="panel foot" id="how">
     <b>Cách chấm (100 điểm, đo từ nhật ký thật):</b>
-    Kết quả 40: số lượt việc làm xong trong 24 giờ (Claude: câu trả lời kết thúc lượt; Codex: task_complete), mỗi lượt +4.
+    Kết quả 40: số lượt việc làm xong trong 24 giờ (Claude: câu trả lời kết thúc lượt; Codex: task_complete) mỗi lượt +4, cộng lượt DEV 7 ngày (đạt +12, chưa đạt −4).
     Tin cậy 20: tỉ lệ lệnh/công cụ chạy không lỗi trong 24 giờ (lỗi 25% trở lên = 0; chưa chạy lệnh nào tính 15). Chăm chỉ 20: số giờ có hoạt động trong 24 giờ (10 giờ trở lên = đủ).
     Tiết kiệm 20: token mới mỗi giờ làm so với mức giữa của đội cùng nền tảng (bằng hoặc thấp hơn = đủ điểm, gấp 4 lần = 0).
     Xếp loại: <b>A</b> từ 80, <b>B</b> từ 65, <b>C</b> từ 50, <b>D</b> dưới 50.
@@ -220,6 +220,7 @@ function table(d) {
     td(vn(r.hr24) + " h");
     td(String(r.done.d24)).setAttribute("data-tip", `${r.done.d24} lượt việc xong trong 24 giờ, ${r.done.d7} lượt trong 7 ngày`);
     td(r.tool.n ? `${r.tool.err}/${r.tool.n}` : "–").setAttribute("data-tip", r.tool.n ? `${r.tool.err} lần lỗi trên ${r.tool.n} lệnh/công cụ trong 24 giờ` : "Chưa chạy lệnh nào trong 24 giờ");
+    td(r.dev.turns ? `${r.dev.ok} / ${r.dev.turns}` : "–").setAttribute("data-tip", r.dev.turns ? `${r.dev.ok} lượt đạt, ${r.dev.fail} lượt chưa đạt` : "Chưa có lượt DEV trong 7 ngày");
     td(`${r.msg.sent} ↑ ${r.msg.recv} ↓`).setAttribute("data-tip", `Gửi ${r.msg.sent} tin, nhận ${r.msg.recv} tin trong 24 giờ`);
     td(tok(r.t24.t)).setAttribute("data-tip", `Mới ${tok(r.t24.i + r.t24.o)} (vào ${tok(r.t24.i)}, ra ${tok(r.t24.o)})<br>Đọc lại từ đệm ${tok(r.t24.c)}`);
     td(r.perHour ? tok(r.perHour) : "–");
