@@ -281,5 +281,7 @@ setInterval(() => { $("clock").textContent = new Date().toLocaleTimeString("vi-V
 addEventListener("resize", () => data && render(data));
 addEventListener("keydown", (e) => { if (e.key === "Escape" && sel) { sel = null; drawer(); table(data); } });
 </script>
+<script src="i18n.js"></script>
 </body>
 </html>
+

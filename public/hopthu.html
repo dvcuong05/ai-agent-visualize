@@ -81,5 +81,7 @@ function render(d) {
 async function load() { try { const r = await fetch("hopthu", { cache: "no-store" }); render(await r.json()); } catch { $("at").textContent = "mất kết nối máy chủ"; } }
 load(); setInterval(load, 30000);
 </script>
+<script src="i18n.js"></script>
 </body>
 </html>
+

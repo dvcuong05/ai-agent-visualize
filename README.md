@@ -30,6 +30,8 @@ Agent sẽ tự làm các bước sau. Những bước có thay đổi bên ngo�
 
 ## Cài tay
 
+Trên máy hiện tại, toàn bộ repo và dữ liệu nằm tại `E:/Workspaces/agent-virtual-office`; đây cũng là thư mục dự án được theo dõi. Xem [cấu hình và cách chạy tại máy này](CAI-DAT-CUC-BO.md). Bản sao tài liệu ban đầu được giữ trong `data/migration-agent-virtual-office/`.
+
 Cần **Node.js 18+** (https://nodejs.org), cùng với **Claude Code** hoặc **Codex** đã dùng trên máy.
 
 ```bash

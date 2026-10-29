@@ -612,5 +612,7 @@ es.onerror = () => { $("live").className = "live off"; };
 setInterval(async () => { if (Date.now() - lastMsgAt < 3000) return; try { const r = await fetch("state", { cache: "no-store" }); if (r.ok) { $("live").className = "live"; apply(await r.json()); } } catch { $("live").className = "live off"; } }, 1000);
 </script>
 <script src="chat-ui.js"></script>
+<script src="i18n.js"></script>
 </body>
 </html>
+

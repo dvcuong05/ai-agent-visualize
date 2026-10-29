@@ -153,5 +153,7 @@ async function load() { try { const r = await fetch("docs", { cache: "no-store" 
 load(); setInterval(load, 5000);
 setInterval(() => { $("clock").textContent = new Date().toLocaleTimeString("vi-VN", { hour12: false }); }, 1000);
 </script>
+<script src="i18n.js"></script>
 </body>
 </html>
+

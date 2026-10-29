@@ -528,7 +528,12 @@ function snapshot() {
   const ht = hopthuNow();
   if (ht.tong && ht.tong.nhac2) alerts.push({ level: "bad", text: `Hòm thư: ${ht.tong.nhac2} tin đã đọc lại ≥ 2 lần mà chưa xong` });
   const { weekRows, ...devOut } = dev;
-  return { now: t, title: CFG.title, subtitle: CFG.subtitle, ownerName: CFG.ownerName, tinKet: { at: t, items: [] }, agents: out, dev: { ...devOut, lastRows: dev.lastRows.slice(-25), match },
+  const bilingual = (vi, en) => vi && en ? { vi: String(vi), en: String(en) } : null;
+  return { now: t, title: CFG.title, subtitle: CFG.subtitle, ownerName: CFG.ownerName,
+    localization: { title: bilingual(CFG.title, CFG.titleEn), subtitle: bilingual(CFG.subtitle, CFG.subtitleEn), ownerName: bilingual(CFG.ownerName, CFG.ownerNameEn),
+      rooms: Object.fromEntries(Object.entries(CFG.roomLabels || {}).map(([k, v]) => [k, bilingual(v.vi, v.en)]).filter(([, v]) => v)),
+      staff: (CFG.staff || []).flatMap((s) => [bilingual(s.name, s.nameEn), bilingual(s.role, s.roleEn)].filter(Boolean)) },
+    tinKet: { at: t, items: [] }, agents: out, dev: { ...devOut, lastRows: dev.lastRows.slice(-25), match },
     turns, team, tasks: taskView, sys, events: recent.slice(-300), alerts, asks: ceoAsks(out, t), money: moneyOf(week, t) };
 }
 

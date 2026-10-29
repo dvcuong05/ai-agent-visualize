@@ -72,5 +72,7 @@ function render(s) {
 async function load() { try { const r = await fetch("state", { cache: "no-store" }); if (r.ok) render(await r.json()); } catch {} }
 load(); setInterval(load, 3000);
 </script>
+<script src="i18n.js"></script>
 </body>
 </html>
+

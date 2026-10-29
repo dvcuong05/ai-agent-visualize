@@ -69,13 +69,15 @@ async function main() {
     }
   }
   const title = flag("title") || await ask("Tên văn phòng", old.title || "Văn phòng AI");
+  const titleEn = flag("title-en") || old.titleEn || (YES ? "" : await ask("Office name in English (optional)", ""));
   const ownerName = flag("owner") || await ask("Bạn muốn được gọi là gì trong văn phòng", old.ownerName || "Giám đốc");
+  const ownerNameEn = flag("owner-en") || old.ownerNameEn || (YES ? "" : await ask("Owner name in English (optional)", ""));
   const phone = flag("key") ? "c" : (await ask("Có muốn xem trên điện thoại qua Internet không? (c/k)", old.accessKey ? "c" : "k")).toLowerCase();
   const accessKey = flag("key") || (phone.startsWith("c") ? old.accessKey || crypto.randomBytes(9).toString("base64url") : "");
   const chen = args.includes("--chen-luat") ? "c" : YES ? "k" : (await ask("Dán đoạn luật đội vào AGENTS.md / CLAUDE.md của dự án để agent tự dùng văn phòng? (c/k)", "c")).toLowerCase();
   if (rl) rl.close();
 
-  const cfg = { ...old, title, subtitle: old.subtitle || "Công ty AI · trực tiếp", ownerName, port: old.port || 7788, host: old.host || "127.0.0.1", projects, keepHours: old.keepHours || 24, accessKey, dataDir: old.dataDir || "data", aiCapUsd: old.aiCapUsd || 100, staff: old.staff || [], hide: old.hide || [] };
+  const cfg = { ...old, title, ...(titleEn ? { titleEn } : {}), subtitle: old.subtitle || "Công ty AI · trực tiếp", ownerName, ...(ownerNameEn ? { ownerNameEn } : {}), port: old.port || 7788, host: old.host || "127.0.0.1", projects, keepHours: old.keepHours || 24, accessKey, dataDir: old.dataDir || "data", aiCapUsd: old.aiCapUsd || 100, staff: old.staff || [], hide: old.hide || [] };
   if (fs.existsSync(OUT)) fs.copyFileSync(OUT, OUT + ".bak");
   fs.writeFileSync(OUT, JSON.stringify(cfg, null, 2) + "\n");
   console.log(`\nĐã ghi ${OUT}`);
